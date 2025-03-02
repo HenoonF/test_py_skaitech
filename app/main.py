@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import FastAPI, HTTPException, status
 
-from models import CrewMember
-from service import CrewService
-from schema import CrewMemberCreate, CrewMemberResponse
+from app.models import CrewMember
+from app.service import CrewService
+from app.schema import CrewMemberCreate, CrewMemberResponse
 
 app = FastAPI()
 
@@ -52,12 +52,11 @@ async def create_crew_member(crew_member: CrewMemberCreate):
 
 @app.delete("/crew/{crew_id}")
 async def delete_crew_member(crew_id: int):
-    for i in range(len(crew_members)) :
-        c = crew_members[i]
-        if c.id == crew_id :
-            crew_members.pop(i)
+    for c in crew_members:
+        if c.id == crew_id:
+            crew_members.remove(c)
             return {"message":"Crew member deleted"}
-    raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Crew member with ID {crew_id} not found")
+    raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Crew member not found")
 
 
 @app.put("/crew/{crew_id}/update-availability")
